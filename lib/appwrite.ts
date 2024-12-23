@@ -10,8 +10,8 @@ import { openAuthSessionAsync } from 'expo-web-browser';
 
 export const config = {
   platform: 'com.immo.immo',
-  endpoint: process.env.EXPO_APP_APPWRITE_ENDPOINT,
-  projectId: process.env.EXPO_APP_APPWRITE_PROJECT_ID,
+  endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT,
+  projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID,
 };
 
 export const client = new Client();

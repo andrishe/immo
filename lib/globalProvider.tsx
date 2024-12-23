@@ -29,7 +29,6 @@ export const GlobalProvider = ({ children }: PropsWithChildren) => {
 
   const isLoggedIn = !!user;
 
-  console.log(JSON.stringify(user, null, 2));
   return (
     <globalContext.Provider value={{ isLoggedIn, user, loading, refetch }}>
       {children}

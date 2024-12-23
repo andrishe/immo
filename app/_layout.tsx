@@ -2,7 +2,10 @@ import { SplashScreen, Stack } from 'expo-router';
 import './global.css';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
-import GlobalProvider from '@/lib/globalProvider';
+import { GlobalProvider, useGlobalContext } from '@/lib/globalProvider';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Redirect } from 'expo-router';
+import { ActivityIndicator } from 'react-native';
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -26,10 +29,32 @@ export default function RootLayout() {
 
   return (
     <GlobalProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="sign-in" />
-      </Stack>
+      <InnerRootLayout />
     </GlobalProvider>
+  );
+}
+
+function InnerRootLayout() {
+  const { loading, isLoggedIn } = useGlobalContext();
+
+  if (loading) {
+    return (
+      <SafeAreaView className="bg-white h-full justify-center items-center">
+        <ActivityIndicator className="text-primary-300" size="large" />
+      </SafeAreaView>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return <Redirect href="/(auth)/sign-in" />;
+  }
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="properties/[id]" />
+    </Stack>
   );
 }
