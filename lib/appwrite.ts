@@ -112,7 +112,45 @@ export async function getProperties({
   limit?: number;
 }) {
   try {
+    const builderQuery = [Query.orderDesc('$createdAt')];
+    if (filter && filter !== 'all') {
+      builderQuery.push(Query.equal('type', filter));
+    }
+    if (query) {
+      builderQuery.push(
+        Query.or([
+          Query.search('name', query),
+          Query.search('type', query),
+          Query.search('address', query),
+        ])
+      );
+    }
+    if (limit) {
+      builderQuery.push(Query.limit(limit));
+    }
+
+    const result = await databases.listDocuments(
+      config.databaseId!,
+      config.propertiesCollectionId!,
+      builderQuery
+    );
+    return result.documents;
   } catch (error) {
     console.error(error);
+    return [];
+  }
+}
+
+export async function getPropertyById({ id }: { id: string }) {
+  try {
+    const result = await databases.getDocument(
+      config.databaseId!,
+      config.propertiesCollectionId!,
+      id
+    );
+    return result;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 }
